@@ -6,6 +6,9 @@ let g:loaded_watchdogs = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! s:choose_filetype()
+	return substitute(&filetype, '\v<(\S+)(\.\S+)', '\1', '')
+endfunction
 
 function! s:watchdogs_type(filetype)
 	if empty(a:filetype)
@@ -53,10 +56,10 @@ endfunction
 
 
 command! -nargs=* -range=0 -complete=customlist,quickrun#complete
-\	WatchdogsRun call s:run(<q-args>,s:watchdogs_type(&filetype),  1)
+\	WatchdogsRun call s:run(<q-args>,s:watchdogs_type(s:choose_filetype()),  1)
 
 command! -nargs=* -range=0 -complete=customlist,quickrun#complete
-\	WatchdogsRunSilent call s:run(<q-args>,s:watchdogs_type(&filetype), 0)
+\	WatchdogsRunSilent call s:run(<q-args>,s:watchdogs_type(s:choose_filetype()), 0)
 
 command! -nargs=0
 \	WatchdogsRunSweep call quickrun#sweep_sessions()
@@ -122,10 +125,10 @@ endfunction
 
 augroup watchdogs-plugin
 	autocmd!
-	autocmd BufWritePost * call <SID>watchdogs_check_bufwrite(&filetype)
+	autocmd BufWritePost * call <SID>watchdogs_check_bufwrite(<SID>choose_filetype())
 
 	autocmd BufWritePost * let b:watchdogs_checked_cursorhold = 0
-	autocmd CursorHold   * call <SID>watchdogs_check_cursorhold(&filetype)
+	autocmd CursorHold   * call <SID>watchdogs_check_cursorhold(<SID>choose_filetype())
 augroup END
 
 
