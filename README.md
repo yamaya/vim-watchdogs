@@ -28,6 +28,8 @@ Async syntax check plugin.
 * coffee
  * coffee
  * coffeelint
+* css
+ * csslint
 * D
  * dmd
 * go
@@ -36,6 +38,7 @@ Async syntax check plugin.
  * go vet
 * Haml
  * haml
+ * haml-lint
 * Haskell
  * ghc-mod
  * hlint
@@ -44,8 +47,15 @@ Async syntax check plugin.
  * javac
 * JavaScript
  * jshint
+ * eslint
+* JSON
+ * jsonlint
 * Lua
  * luac
+* Nim
+ * nim
+* Markdown
+ * redpen
 * Perl
  * perl
  * vimparse.pl
@@ -67,6 +77,7 @@ Async syntax check plugin.
  * sh
 * TypeScript
  * tsc
+ * tslint
 * Vim script
  * vimlint
  * vimlint_by_dbakker

@@ -67,15 +67,15 @@ let g:watchdogs#default_config = {
 \	"cpp/watchdogs_checker" : {
 \		"type"
 \			: executable("clang-check") ? "watchdogs_checker/clang_check"
-\			: executable("clang++")     ? "watchdogs_checker/clang++"
 \			: executable("g++")         ? "watchdogs_checker/g++"
+\			: executable("clang++")     ? "watchdogs_checker/clang++"
 \			: executable("cl")          ? "watchdogs_checker/cl"
 \			: "",
 \	},
 \
 \	"watchdogs_checker/g++" : {
 \		"command"   : "g++",
-\		"exec"      : "%c %o -std=gnu++0x -fsyntax-only %s:p ",
+\		"exec"      : "%c -std=gnu++0x %o -fsyntax-only %s:p ",
 \	},
 \
 \	"watchdogs_checker/g++03" : {
@@ -85,7 +85,7 @@ let g:watchdogs#default_config = {
 \
 \	"watchdogs_checker/clang++" : {
 \		"command"   : "clang++",
-\		"exec"      : "%c %o -std=gnu++0x -fsyntax-only %s:p ",
+\		"exec"      : "%c -std=gnu++0x %o -fsyntax-only %s:p ",
 \	},
 \
 \	"watchdogs_checker/clang++03" : {
@@ -107,7 +107,8 @@ let g:watchdogs#default_config = {
 \
 \	"typescript/watchdogs_checker" : {
 \		"type"
-\			: executable("tsc") ? "watchdogs_checker/tsc"
+\			: executable("tsc")    ? "watchdogs_checker/tsc"
+\			: executable("tslint") ? "watchdogs_checker/tslint"
 \			: ""
 \	},
 \
@@ -115,6 +116,12 @@ let g:watchdogs#default_config = {
 \		"command" : "tsc",
 \		"exec"	: "%c %s:p",
 \		"errorformat" : '%+A\ %#%f\ %#(%l\\,%c):\ %m,%C%m',
+\	},
+\
+\	"watchdogs_checker/tslint" : {
+\		"command" : "tslint",
+\		"exec"	: "%c %s:p",
+\		"errorformat" : '%f[%l\\,\ %c]:\ %m',
 \	},
 \
 \
@@ -137,6 +144,17 @@ let g:watchdogs#default_config = {
 \		"errorformat" : '%f\,%l\,%trror\,%m',
 \	},
 \
+\	"css/watchdogs_checker" : {
+\		"type"
+\			: executable("csslint") ? "watchdogs_checker/csslint"
+\			: ""
+\	},
+\
+\	"watchdogs_checker/csslint" : {
+\		"command" : "csslint",
+\		"exec"    : "%c --format=compact %o %s:p",
+\		"errorformat" : '%f:\ line\ %l\\,\ col\ %c\\,\ %m',
+\	},
 \
 \	"d/watchdogs_checker" : {
 \		"type"
@@ -180,12 +198,19 @@ let g:watchdogs#default_config = {
 \	"haml/watchdogs_checker" : {
 \		"type"
 \			: executable("haml")   ? "watchdogs_checker/haml"
+\			: executable("haml-lint")   ? "watchdogs_checker/haml-lint"
 \			: ""
 \	},
 \
 \	"watchdogs_checker/haml" : {
 \		"command" : "haml",
 \		"cmdopt" : "--check --trace",
+\	},
+\
+\	"watchdogs_checker/haml-lint" : {
+\		"command" : "haml-lint",
+\		"exec"    : "%c --no-color %o %s:p",
+\		"errorformat" : '%f:%l \\[%t\\] %m',
 \	},
 \
 \
@@ -231,13 +256,33 @@ let g:watchdogs#default_config = {
 \	"javascript/watchdogs_checker" : {
 \		"type"
 \			: executable("jshint") ? "watchdogs_checker/jshint"
+\			: executable("eslint") ? "watchdogs_checker/eslint"
 \			: ""
 \	},
 \
 \	"watchdogs_checker/jshint" : {
 \		"command" : "jshint",
 \		"exec"    : "%c %o %s:p",
-\		"errorformat" : "%f: line %l\\,\ col %c\\, %m",
+\		"errorformat" : '%f: line %l\,\ col %c\, %m',
+\	},
+\
+\	"watchdogs_checker/eslint" : {
+\		"command" : "eslint",
+\		"exec"    : "%c -f compact %o %s:p",
+\		"errorformat" : '%E%f: line %l\, col %c\, Error - %m,' .
+\						'%W%f: line %l\, col %c\, Warning - %m',
+\	},
+\
+\	"json/watchdogs_checker" : {
+\		"type"
+\			: executable("jsonlint") ? "watchdogs_checker/jsonlint"
+\			: ""
+\	},
+\
+\	"watchdogs_checker/jsonlint" : {
+\		"command" : "jsonlint",
+\		"exec"    : "%c %o -c %s:p",
+\		"errorformat" : '%f: line %l\\, col %c\\, %m',
 \	},
 \
 \
@@ -253,15 +298,24 @@ let g:watchdogs#default_config = {
 \		"errorformat" : '%.%#: %#%f:%l: %m',
 \	},
 \
+\
 \	"nim/watchdogs_checker" : {
 \		"type" : "watchdogs_checker/nim",
 \	},
 \
 \	"watchdogs_checker/nim" : {
-\	"command" : "nim",
-\	"cmdopt"  : "check",
-\	"errorformat" : '%-GHint: %m,%E%f(%l\, %c) Error: %m,%W%f(%l\, %c) Hint: %m',
-\ },
+\		"command" : "nim",
+\		"cmdopt"  : "check",
+\		"errorformat" : '%-GHint: %m,%E%f(%l\, %c) Error: %m,%W%f(%l\, %c) Hint: %m',
+\	},
+\
+\
+\	"markdown/watchdogs_checker" : {
+\		"type"
+\			: executable("redpen") ? "watchdogs_checker/redpen"
+\			: ""
+\	},
+\
 \
 \	"perl/watchdogs_checker" : {
 \		"type"
@@ -403,10 +457,16 @@ let g:watchdogs#default_config = {
 \
 \	"vim/watchdogs_checker" : {
 \		"type"
+\			: executable("vint") ? "watchdogs_checker/vint"
 \			: s:executable_vim_vimlint() ? "watchdogs_checker/vimlint"
 \			: s:executable_vimlint() ? "watchdogs_checker/vimlint_by_dbakker"
 \			: ""
 \	},
+\
+\	"watchdogs_checker/vint" : {
+\		'command': 'vint',
+\		"exec" : '%c %o %s',
+\	 },
 \
 \	"watchdogs_checker/vimlint" : {
 \		'command': 'vim',
@@ -419,6 +479,12 @@ let g:watchdogs#default_config = {
 \		'exec': '%C ' . s:get_vimlint() . ' %s',
 \		"runner" : "vimproc",
 \		'errorformat': '%f:%l:%c: %trror: %m,%f:%l:%c: %tarning: %m',
+\	},
+\
+\
+\	"watchdogs_checker/redpen" : {
+\		"command" : "redpen",
+\		"exec"    : "%c %o %s:p",
 \	},
 \
 \

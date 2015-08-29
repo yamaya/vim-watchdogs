@@ -75,8 +75,17 @@ let g:watchdogs_check_BufWritePost_enable =
 let g:watchdogs_check_BufWritePost_enables =
 \	get(g:, "watchdogs_check_BufWritePost_enables", {})
 
+let g:watchdogs_check_BufWritePost_enable_on_wq =
+\	get(g:, "g:watchdogs_check_BufWritePost_disable_on_wq", 1)
 
+
+let s:called_quit_pre = 0
 function! s:watchdogs_check_bufwrite(filetype)
+	if !g:watchdogs_check_BufWritePost_enable_on_wq && s:called_quit_pre
+		let s:called_quit_pre = 0
+		return
+	endif
+	let s:called_quit_pre = 0
 	if exists("*quickrun#is_running")
 		if quickrun#is_running()
 			return
@@ -114,19 +123,21 @@ function! s:watchdogs_check_cursorhold(filetype)
 	if get(b:, "watchdogs_checked_cursorhold", 1)
 		return
 	endif
+
 	if (g:watchdogs_check_CursorHold_enable
 \	|| get(g:watchdogs_check_CursorHold_enables, a:filetype, 0))
 \	&& get(g:watchdogs_check_CursorHold_enables, a:filetype, 1)
-		WatchdogsRunSilent -hook/watchdogs_quickrun_running_checker/enable 0
 		let b:watchdogs_checked_cursorhold=1
+		WatchdogsRunSilent -hook/watchdogs_quickrun_running_checker/enable 0
 	endif
 endfunction
 
 
 augroup watchdogs-plugin
 	autocmd!
+	autocmd QuitPre * let s:called_quit_pre = 1
+	autocmd CursorMoved * let s:called_quit_pre = 0
 	autocmd BufWritePost * call <SID>watchdogs_check_bufwrite(<SID>choose_filetype())
-
 	autocmd BufWritePost * let b:watchdogs_checked_cursorhold = 0
 	autocmd CursorHold   * call <SID>watchdogs_check_cursorhold(<SID>choose_filetype())
 augroup END

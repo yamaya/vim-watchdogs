@@ -158,6 +158,9 @@
 - "jshint"
   jshint を使用した JavaScript のシンタックスチェックを行います。
 
+- "eslint"
+  eslint を使用した JavaScript のシンタックスチェックを行います。
+
 - "ghc-mod"
   ghc-mod を使用した Haskell のシンタックスチェックを行います。
 
@@ -218,13 +221,21 @@
 - "scss"
   scss で --check オプションで scss のシンタックスチェックを行います。
 
-- "typescript"
+- "tsc"
   tsc で typescript のシンタックスチェックを行います。
+
+- "tslint"
+  tslint で typescript のシンタックスチェックを行います。
+  palantir/tslint - https://github.com/palantir/tslint
 
 - "coffee"
   coffee の -c -l オプションで coffee のシンタックスチェックを行います。
 
   coffeelint で coffee のシンタックスチェックを行います。
+
+- "csslint"
+  csslint で CSS のシンタックスチェックを行います。
+  CSSLint/csslint - https://github.com/CSSLint/csslint
 
 - "vimlint"
   vim-vimlint で Vim script のシンタックスチェックを行います。
@@ -237,6 +248,19 @@
 - "haml"
   haml の --check --trace オプションで haml のシンタックスチェックを
   行います。
+
+- "haml-lint"
+  haml-lint で haml のシンタックスチェックを行ないます。
+  causes/haml-lint - https://github.com/causes/haml-lint
+
+- "jsonlint"
+  jsonlint を使用した JSON のシンタックスチェックを行います。
+
+- "nim"
+  nim を使用した nim のシンタックスチェックを行います。
+
+- "redpen"
+  redpen を使用した自然言語で書かれた文書のチェックを行います。
 
 
 各ツールを使用する為に予め Vim から使えるようにしておく必要があります。
@@ -308,6 +332,15 @@
 
 - "haml"
   デフォルト : "watchdogs_checker/haml"
+
+- "json"
+  デフォルト : "watchdogs_checker/jsonlint"
+
+- "nim"
+  デフォルト : "watchdogs_checker/nim"
+
+- "markdown"
+  デフォルト : "watchdogs_checker/redpen"
 
 
 ==============================================================================
@@ -541,7 +574,7 @@ g:watchdogs_check_BufWritePost_enables		 *g:watchdogs_check_BufWritePost_enables
 	let g:watchdogs_check_BufWritePost_enables = {}
 <
 
-g:watchdogs_check_CursorHold_enable		 *g:watchdogs_check_CursorHold_enable*
+g:watchdogs_check_CursorHold_enable	 *g:watchdogs_check_CursorHold_enable*
 	一定時間キー入力がなかった場合の自動チェックの制御を行います。
 	詳しくは |watchdogs-auto-CursorHold| を参照して下さい。
 >
@@ -549,7 +582,7 @@ g:watchdogs_check_CursorHold_enable		 *g:watchdogs_check_CursorHold_enable*
 	let g:watchdogs_check_CursorHold_enable = 0
 <
 
-g:watchdogs_check_CursorHold_enables		 *g:watchdogs_check_CursorHold_enables*
+g:watchdogs_check_CursorHold_enables	 *g:watchdogs_check_CursorHold_enables*
 	一定時間キー入力がなかった場合の自動チェックの制御を行います。
 	詳しくは |watchdogs-auto-CursorHold| を参照して下さい。
 	|g:watchdogs_check_CursorHold_enable| とは違い、filetype ごとの設定を
@@ -564,6 +597,13 @@ b:watchdogs_checker_type			*b:watchdogs_checker_type*
 Example >
 	" そのバッファで使用される設定を記述
 	let b:watchdogs_checker_type = "watchdogs_checker/clang"
+<<
+g:watchdogs_check_BufWritePost_enable_on_wq
+				*g:watchdogs_check_BufWritePost_enable_on_wq*
+	0 が設定されている場合、|:wq| 時に |watchdogs-auto-BufWritePost|
+	が実行されなくなります。
+Default: >
+	let g:watchdogs_check_BufWritePost_enable_on_wq = 1
 <
 
 
@@ -770,6 +810,17 @@ Example: >
 	" watchdogs.vim の設定を追加
 	call watchdogs#setup(g:quickrun_config)
 <
+<
+------------------------------------------------------------------------------
+|:wq| 時に実行されないようにする		*watchdogs-examples-no-run-wq*
+
+|g:watchdogs_check_BufWritePost_enable_on_wq| に 0 を設定します。
+
+Example: >
+    let g:watchdogs_check_BufWritePost_enable_on_wq = 0
+<
+
+
 
 
 
