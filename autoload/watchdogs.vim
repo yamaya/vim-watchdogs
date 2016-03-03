@@ -38,6 +38,7 @@ let g:watchdogs#default_config = {
 \	"watchdogs_checker/_" : {
 \		"runner" : "vimproc",
 \		"outputter" : "quickfix",
+\		"outputter/quickfix/open_cmd" : "cwindow",
 \		"hook/hier_update/enable_exit" : 1,
 \		"hook/quickfix_status_enable/enable_exit" : 1,
 \		"hook/shebang/enable" : 0,
@@ -263,14 +264,15 @@ let g:watchdogs#default_config = {
 \	"watchdogs_checker/jshint" : {
 \		"command" : "jshint",
 \		"exec"    : "%c %o %s:p",
-\		"errorformat" : '%f: line %l\,\ col %c\, %m',
+\		"errorformat" : '%f: line %l\,\ col %c\, %m,%-G%.%#',
 \	},
 \
 \	"watchdogs_checker/eslint" : {
 \		"command" : "eslint",
 \		"exec"    : "%c -f compact %o %s:p",
 \		"errorformat" : '%E%f: line %l\, col %c\, Error - %m,' .
-\						'%W%f: line %l\, col %c\, Warning - %m',
+\						'%W%f: line %l\, col %c\, Warning - %m,' .
+\						'%-G%.%#',
 \	},
 \
 \	"json/watchdogs_checker" : {
@@ -313,7 +315,32 @@ let g:watchdogs#default_config = {
 \	"markdown/watchdogs_checker" : {
 \		"type"
 \			: executable("redpen") ? "watchdogs_checker/redpen"
+\			: executable("textlint") ? "watchdogs_checker/textlint"
+\			: executable("mdl") ? "watchdogs_checker/mdl"
+\			: executable("eslint-md") ? "watchdogs_checker/eslint-md"
 \			: ""
+\	},
+\
+\	"watchdogs_checker/textlint" : {
+\		"command" : "textlint",
+\		"exec"    : "%c -f compact %o %s:p",
+\		"errorformat" : '%E%f: line %l\, col %c\, Error - %m,' .
+\						'%W%f: line %l\, col %c\, Warning - %m,' .
+\						'%-G%.%#'
+\	},
+\
+\	"watchdogs_checker/mdl" : {
+\		"command"     : "mdl",
+\		"errorformat" : "%E%f:%l: %m," .
+\										"%W%f: Kramdown Warning: %m found on line %l"
+\	},
+\
+\	"watchdogs_checker/eslint-md" : {
+\		"command" : "eslint-md",
+\		"exec"    : "%c -f compact %o %s:p",
+\		"errorformat" : '%E%f: line %l\, col %c\, Error - %m,' .
+\						'%W%f: line %l\, col %c\, Warning - %m,' .
+\						'%-G%.%#',
 \	},
 \
 \
@@ -339,6 +366,8 @@ let g:watchdogs#default_config = {
 \	"php/watchdogs_checker" : {
 \		"type"
 \			: executable("php") ? "watchdogs_checker/php"
+\			: executable("phpcs") ? "watchdogs_checker/phpcs"
+\			: executable("phpmd") ? "watchdogs_checker/phpmd"
 \			: ""
 \	},
 \
@@ -348,6 +377,19 @@ let g:watchdogs#default_config = {
 \		"errorformat" : '%m\ in\ %f\ on\ line\ %l',
 \	},
 \
+\	"watchdogs_checker/phpcs" : {
+\		"command" : "phpcs",
+\		"exec"    : "%c --report=emacs %o %s:p",
+\		"errorformat" : '%f:%l:%c:\ %m',
+\	},
+\
+\	"watchdogs_checker/phpmd" : {
+\		"command" : "phpmd",
+\		"exec"    : "%c %s:p text %o",
+\		"cmdopt"  : "cleancode,codesize,design,naming,unusedcode",
+\		"errorformat" : '%f:%l%\s%m,%-G%.%#',
+\	},
+\
 \
 \	"python/watchdogs_checker" : {
 \		"type"
@@ -355,13 +397,13 @@ let g:watchdogs#default_config = {
 \			: executable("flake8") ? "watchdogs_checker/flake8"
 \			: ""
 \	},
-\	
+\
 \	"watchdogs_checker/pyflakes" : {
 \		"command" : "pyflakes",
 \		"exec"    : '%c %o %s:p',
 \		"errorformat" : '%f:%l:%m',
 \	},
-\	
+\
 \	"watchdogs_checker/flake8" : {
 \		"command" : "flake8",
 \		"exec"    : '%c %o %s:p',
@@ -404,6 +446,7 @@ let g:watchdogs#default_config = {
 \	"scss/watchdogs_checker" : {
 \		"type"
 \			: executable("sass") ? "watchdogs_checker/scss"
+\			: executable("scss-lint") ? "watchdogs_checker/scss-lint"
 \			: ""
 \	},
 \
@@ -413,6 +456,12 @@ let g:watchdogs#default_config = {
 \		"errorformat"
 \			: '%ESyntax %trror:%m,%C        on line %l of %f,%Z%.%#'
 \			.',%Wwarning on line %l:,%Z%m,Syntax %trror on line %l: %m',
+\	},
+\
+\	"watchdogs_checker/scss-lint" : {
+\		"command" : "scss-lint",
+\		"exec"    : "%c %o %s:p",
+\		"errorformat" : '%f:%l\ %m',
 \	},
 \
 \
@@ -432,6 +481,9 @@ let g:watchdogs#default_config = {
 \	"sh/watchdogs_checker" : {
 \		"type"
 \			: executable("sh") ? "watchdogs_checker/sh"
+\			: executable("shellcheck") ? "watchdogs_checker/shellcheck"
+\			: executable("bashate") ? "watchdogs_checker/bashate"
+\			: executable("checkbashisms") ? "watchdogs_checker/checkbashisms"
 \			: ""
 \	},
 \
@@ -440,6 +492,27 @@ let g:watchdogs#default_config = {
 \		"exec"    : "%c -n %o %s:p",
 \		"errorformat"    : '%f:\ line\ %l:%m',
 \	 },
+\
+\	"watchdogs_checker/shellcheck" : {
+\		"command" : "shellcheck",
+\		'cmdopt'  : '-f gcc',
+\	 },
+\
+\	"watchdogs_checker/bashate" : {
+\		"command"     : "bashate",
+\		"errorformat" : "%E[E] %m,%W[W] %m,%Z - %f : L%l,%-G%.%#",
+\	 },
+\
+\	"watchdogs_checker/checkbashisms" : {
+\		"command"     : "checkbashisms",
+\		"errorformat" : "%-Gscript %f is already a bash script; skipping," .
+\										"%Eerror: %f: %m\, opened in line %l," .
+\										"%Eerror: %f: %m," .
+\										"%Ecannot open script %f for reading: %m," .
+\										"%Wscript %f %m,%C%.# lines," .
+\										"%Wpossible bashism in %f line %l (%m):,%C%.%#,%Z.%#," .
+\										"%-G%.%#"
+\	},
 \
 \
 \	"zsh/watchdogs_checker" : {
@@ -486,6 +559,19 @@ let g:watchdogs#default_config = {
 \		"command" : "redpen",
 \		"exec"    : "%c %o %s:p",
 \	},
+\
+\
+\	"yaml/watchdogs_checker" : {
+\		"type"
+\			: executable("yaml-lint") ? "watchdogs_checker/yaml-lint"
+\			: ""
+\	},
+\
+\	"watchdogs_checker/yaml-lint" : {
+\		"command"     : "yaml-lint",
+\		'cmdopt'      : '-q',
+\		"errorformat" : "%.%#(%f): %m at line %l column %c%.%#"
+\	 },
 \
 \
 \	"watchdogs_checker_dummy" : {}

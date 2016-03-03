@@ -56,11 +56,16 @@ Async syntax check plugin.
  * nim
 * Markdown
  * redpen
+ * textlint
+ * mdl
+ * eslint-md
 * Perl
  * perl
  * vimparse.pl
 * PHP
  * php
+ * phpcs
+ * phpmd
 * Python
  * pyflakes
  * flake8
@@ -73,14 +78,20 @@ Async syntax check plugin.
  * scalac
 * scss
  * scss
+ * scss-lint
 * sh
  * sh
+ * shellcheck
+ * bashate
+ * checkbashisms
 * TypeScript
  * tsc
  * tslint
 * Vim script
  * vimlint
  * vimlint_by_dbakker
+* YAML
+ * yaml-lint
 * zsh
  * zsh
 
