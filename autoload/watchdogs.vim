@@ -269,7 +269,7 @@ let g:watchdogs#default_config = {
 \	"watchdogs_checker/jshint" : {
 \		"command" : "jshint",
 \		"exec"    : "%c %o %s:p",
-\		"errorformat" : '%f: line %l\,\ col %c\, %m,%-G%.%#',
+\		"errorformat" : '%f: line %l\,\ col %c\, %m, %-G%.%#',
 \	},
 \
 \	"watchdogs_checker/eslint" : {
@@ -398,8 +398,8 @@ let g:watchdogs#default_config = {
 \
 \	"python/watchdogs_checker" : {
 \		"type"
-\			: executable("pyflakes") ? "watchdogs_checker/pyflakes"
 \			: executable("flake8") ? "watchdogs_checker/flake8"
+\			: executable("pyflakes") ? "watchdogs_checker/pyflakes"
 \			: ""
 \	},
 \
@@ -432,6 +432,22 @@ let g:watchdogs#default_config = {
 \		"errorformat" : '%f:%l:%c:%m',
 \	},
 \
+\	"rust/watchdogs_checker" : {
+\		"type"
+\			: executable("rustc") ? "watchdogs_checker/rustc"
+\			: ""
+\	},
+\
+\	"watchdogs_checker/rustc" : {
+\		"command" : "rustc",
+\		"exec"    : '%c %o %s:p',
+\		"cmdopt" : "-Z parse-only",
+\		"errorformat"
+\			: '%E%f:%l:%c: %\d%#:%\d%# %.%\{-}error:%.%\{-} %m'
+\			. ',%W%f:%l:%c: %\d%#:%\d%# %.%\{-}warning:%.%\{-} %m'
+\			. ',%C%f:%l %m'
+\			. ',%-Z%.%#',
+\	},
 \
 \	"sass/watchdogs_checker" : {
 \		"type"
@@ -466,7 +482,7 @@ let g:watchdogs#default_config = {
 \	"watchdogs_checker/scss-lint" : {
 \		"command" : "scss-lint",
 \		"exec"    : "%c %o %s:p",
-\		"errorformat" : '%f:%l\ %m',
+\		"errorformat" : '%f:%l\ %m, %-G%.%#',
 \	},
 \
 \
