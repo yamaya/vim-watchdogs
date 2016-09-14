@@ -202,6 +202,10 @@
 - "govet"
   govet で GO言語のシンタックスチェックを行います。
 
+- "golint"
+  golint で GO言語のシンタックスチェックを行います。
+  golang/lint - https://github.com/golang/lint
+
 - "go_vet"
   go の vet オプションで GO言語のシンタックスチェックを行います。
 
@@ -244,6 +248,10 @@
 - "scss-lint"
   scss-lint で scss のシンタックスチェックを行います。
   brigade/scss-lint - https://github.com/brigade/scss-lint
+
+- "stylelint"
+  stylelint で css または scss のシンタックスチェックを行います。
+  stylelint/stylelint - https://github.com/stylelint/stylelint
 
 - "tsc"
   tsc で typescript のシンタックスチェックを行います。
